@@ -1,6 +1,6 @@
-#include "PatternCounter.h"
+#include "include/PatternCounter.h"
 
-PatternCounter::PatternCounter(int patternLength = 4){
+PatternCounter::PatternCounter(int patternLength){
     int arraySize = patternLength - 3;
     if(arraySize < 1){
         arraySize = 1;
@@ -56,6 +56,7 @@ void PatternCounter::took(bool took){
 unsigned int PatternCounter::getCurrentCounter(){
     int index = current / 16;
     int counter = this->counters[index];
+    return counter;
 }
 
 unsigned int PatternCounter::getCounterMask(int shift){
@@ -73,6 +74,7 @@ int PatternCounter::getCounterShift(){
 int PatternCounter::extractTakeValue(unsigned int counter, unsigned int mask, int shift){
     int takeValue = counter & mask;
     takeValue = takeValue >> shift;
+    return takeValue;
 }
 
 void PatternCounter::saveTakeValue(unsigned int counter, unsigned int mask, int shift, int takeValue){

@@ -1,6 +1,4 @@
-#include "LeastRecentlyUsed.h"
-#include "LeastRecentlyUsed.h"
-#include "LeastRecentlyUsed.h"
+#include "include/LeastRecentlyUsed.h"
 
 LeastRecentlyUsed::LeastRecentlyUsed()
 {

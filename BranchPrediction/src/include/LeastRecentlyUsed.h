@@ -1,4 +1,8 @@
+#pragma once
+
 #include <queue>
+
+using namespace std;
 
 class LeastRecentlyUsed {
     public:

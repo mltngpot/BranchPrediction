@@ -1,3 +1,5 @@
+#pragma once
+
 class PatternCounter {
     public:
         PatternCounter(int patternLength = 4);

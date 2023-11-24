@@ -1,3 +1,5 @@
+#pragma once
+
 #include "BufferEntry.h"
 #include "PatternCounter.h"
 #include "LeastRecentlyUsed.h"

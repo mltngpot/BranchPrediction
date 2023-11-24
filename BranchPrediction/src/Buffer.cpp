@@ -1,9 +1,9 @@
 #include <iostream>
 #include <queue>
 
-#include "Buffer.h"
-#include "BufferEntry.h"
-#include "BranchPrediction.h"
+#include "include/Buffer.h"
+#include "include/BufferEntry.h"
+#include "include/BranchPrediction.h"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ Buffer::~Buffer() {
 }
 
 void Buffer::push(BufferEntry entry) {
-	this->buffer->push_back(entry);
+	this->buffer->push(entry);
 }
 
 BufferEntry* Buffer::pop() {
@@ -32,17 +32,18 @@ BufferEntry* Buffer::pop() {
 }
 
 bool Buffer::isEOF() {
-	return this->thread.done() && this->buffer->empty();
+	return this->buffer->empty();
 }
 
 void Buffer::readInput() {
-	while(!this->input.eof()) {
-		string line;
-		getline(this->input, line);
+	string line;
+	istream stream = (this->input);
+	while(getline(stream, line)) {
 		if (line.empty()) {
 			continue;
 		}
-		string address = line.substr(0, 8);
+		string addressHex = line.substr(0, 8);
+		unsigned int address = stoul(addressHex, NULL, 16);
 		bool taken = line.substr(9, 1) == "+";
 		this->buffer->push(BufferEntry(address, taken));
 	}

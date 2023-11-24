@@ -1,4 +1,4 @@
-#include "PatternHistoryTable.h"
+#include "include/PatternHistoryTable.h"
 
 using namespace std;
 

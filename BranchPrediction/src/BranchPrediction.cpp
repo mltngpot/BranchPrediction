@@ -1,7 +1,7 @@
-﻿#include "BranchPrediction.h"
-#include "Buffer.h"
-#include "BufferEntry.h"
-#include "PatternHistoryTable.h"
+﻿#include "include/BranchPrediction.h"
+#include "include/Buffer.h"
+#include "include/BufferEntry.h"
+#include "include/PatternHistoryTable.h"
 
 using namespace std;
 
