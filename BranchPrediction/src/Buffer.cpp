@@ -7,8 +7,8 @@
 
 using namespace std;
 
-Buffer::Buffer(istream& input) {
-	this->input = &input;
+Buffer::Buffer(istream& inStream) {
+	this->input = &inStream;
 	this->buffer = new queue<BufferEntry>();
 	this->reader = thread(&Buffer::readInput, this);
 }
@@ -37,8 +37,7 @@ bool Buffer::isEOF() {
 
 void Buffer::readInput() {
 	string line;
-	istream stream = (this->input);
-	while(getline(stream, line)) {
+	while(getline(*this->input, line)) {
 		if (line.empty()) {
 			continue;
 		}

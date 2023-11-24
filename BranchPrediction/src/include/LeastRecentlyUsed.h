@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <unordered_map>
 
 using namespace std;
 
@@ -10,5 +11,6 @@ class LeastRecentlyUsed {
       unsigned int getLeastUsed();
       void use(unsigned int entry);
     private:
-      queue<int> lruQueue;
+      queue<unsigned int>* lruQueue;
+      unordered_map<unsigned int, int>* lruUsage;
 };

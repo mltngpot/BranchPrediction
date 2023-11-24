@@ -16,7 +16,7 @@ public:
 	BufferEntry* pop();
 	bool isEOF();
 private:
-	istream input;
+	istream* input;
 	thread reader;
 	queue<BufferEntry>* buffer;
 	void readInput();
