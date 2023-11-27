@@ -10,25 +10,22 @@ using namespace std;
 Buffer::Buffer(istream& inStream) {
 	this->input = &inStream;
 	this->buffer = new queue<BufferEntry>();
-	this->reader = thread(&Buffer::readInput, this);
+	//this->reader = thread(&Buffer::readInput, this);
+	this->readInput();
 }
 
 Buffer::~Buffer() {
 	delete this->buffer;
-	this->reader.join();
 }
 
 void Buffer::push(BufferEntry entry) {
 	this->buffer->push(entry);
 }
 
-BufferEntry* Buffer::pop() {
-	if (this->buffer->empty()) {
-		return NULL;
-	}
+BufferEntry Buffer::pop() {
 	BufferEntry entry = this->buffer->front();
 	this->buffer->pop();
-	return &entry;
+	return entry;
 }
 
 bool Buffer::isEOF() {

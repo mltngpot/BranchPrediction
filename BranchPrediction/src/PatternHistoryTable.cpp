@@ -8,6 +8,7 @@ PatternHistoryTable::PatternHistoryTable(int size)
     lru = new LeastRecentlyUsed();
     taken = 0;
     this->size = size;
+    this->quickReference = new int[size];
 }
 
 bool PatternHistoryTable::predict(unsigned int entry)

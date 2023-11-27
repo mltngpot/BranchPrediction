@@ -13,7 +13,7 @@ public:
 	Buffer(istream& input);
 	~Buffer();
 	void push(BufferEntry entry);
-	BufferEntry* pop();
+	BufferEntry pop();
 	bool isEOF();
 private:
 	istream* input;

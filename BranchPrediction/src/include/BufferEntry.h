@@ -1,6 +1,10 @@
 #pragma once
 
 struct BufferEntry {
-	long address;
+	unsigned int address;
 	bool taken;
+	BufferEntry(unsigned int address, bool taken){
+		this->address = address;
+		this->taken = taken;
+	}
 };

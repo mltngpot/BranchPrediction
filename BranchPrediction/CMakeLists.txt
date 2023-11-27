@@ -7,7 +7,7 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
 # Add source to this project's executable.
-add_executable (BranchPrediction ${SOURCES} "src/include/PredictStats.h" "src/PredictStats.cpp")
+add_executable (BranchPrediction ${SOURCES})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET BranchPrediction PROPERTY CXX_STANDARD 20)

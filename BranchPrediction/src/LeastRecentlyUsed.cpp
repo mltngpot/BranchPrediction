@@ -8,7 +8,7 @@ LeastRecentlyUsed::LeastRecentlyUsed()
 
 unsigned int LeastRecentlyUsed::getLeastUsed()
 {
-	unsigned int leastUsed;
+	unsigned int leastUsed = 0;
 	int leastUsedCount;
 	do {
 		unsigned int leastUsed = this->lruQueue->front();
