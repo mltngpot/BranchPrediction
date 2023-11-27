@@ -9,13 +9,14 @@
 using namespace std;
 
 static int PHT_HISTORY_SIZE = 4;
+static int PHT_TABLE_SIZE = 4096;
 
 int main()
 {
-	ifstream input("gccSmall.trace");
-	Buffer* buffer = new Buffer(input);
+	ifstream in("gccSmall.trace");
+	Buffer* buffer = new Buffer(in);
 
-	PatternHistoryTable* pht = new PatternHistoryTable(PHT_HISTORY_SIZE);
+	PatternHistoryTable* pht = new PatternHistoryTable(PHT_HISTORY_SIZE, PHT_TABLE_SIZE);
 
 	PredictStats stats = PredictStats();
 

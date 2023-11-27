@@ -2,13 +2,14 @@
 
 using namespace std;
 
-PatternHistoryTable::PatternHistoryTable(int size)
+PatternHistoryTable::PatternHistoryTable(int patternSize, int tableSize)
 {
-    patterns = new PatternCounter*[size];
+    patterns = new PatternCounter*[tableSize];
     lru = new LeastRecentlyUsed();
     taken = 0;
-    this->size = size;
-    this->quickReference = new int[size];
+    this->patternSize = patternSize;
+    this->tableSize = tableSize;
+    this->quickReference = new unsigned int[tableSize];
 }
 
 bool PatternHistoryTable::predict(unsigned int entry)
@@ -44,13 +45,13 @@ int PatternHistoryTable::find(unsigned int entry){
 
 int PatternHistoryTable::addEntry(unsigned int entry){
     int id = -1;
-    if(taken == size){
+    if(taken == tableSize){
         id = lru->getLeastUsed();
     } else {
         id = taken++;
     }
     quickReference[id] = entry;
-    patterns[id] = new PatternCounter();
+    patterns[id] = new PatternCounter(this->patternSize);
 
     return id;
 }

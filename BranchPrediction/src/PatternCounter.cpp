@@ -22,7 +22,7 @@ bool PatternCounter::predict(){
     unsigned int counter = getCurrentCounter();
     int shift = getCounterShift();
     unsigned int mask = getCounterMask(shift);
-    int takeValue = extractTakeValue(counter, shift, mask);
+    int takeValue = extractTakeValue(counter, mask, shift);
 
     return takeValue > 1;
 }
@@ -39,11 +39,10 @@ void PatternCounter::took(bool took){
     unsigned int counter = getCurrentCounter();
     int shift = getCounterShift();
     unsigned int mask = getCounterMask(shift);
-    int takeValue = extractTakeValue(counter, shift, mask);
+    int takeValue = extractTakeValue(counter, mask, shift);
 
     took ? takeValue++ : takeValue--;
-
-    saveTakeValue(counter, shift, mask, takeValue);
+    saveTakeValue(counter, mask, shift, takeValue);
 
     current = current << 1;
     if(took){
@@ -83,10 +82,10 @@ void PatternCounter::saveTakeValue(unsigned int counter, unsigned int mask, int 
     } else if(takeValue < 0){
         takeValue = 0;
     }
-
-    unsigned int unchangedPart = counter & ~mask;
+    unsigned int invertedMask = ~mask;
+    unsigned int unchangedPart = counter & invertedMask;
     unsigned int changedPart = takeValue << shift;
-    counter = unchangedPart & changedPart;
+    counter = unchangedPart | changedPart;
     
     int index = current / 16;
     this->counters[index] = counter;
