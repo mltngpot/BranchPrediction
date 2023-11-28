@@ -9,7 +9,7 @@
 using namespace std;
 
 static int PHT_HISTORY_SIZE = 4;
-static int PHT_TABLE_SIZE = 4096;
+static int PHT_TABLE_SIZE = 512;
 
 int main()
 {
