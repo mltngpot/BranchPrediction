@@ -4,20 +4,20 @@
 #include <iostream>
 #include <thread>
 
-#include "BufferEntry.h"
+#include "PCEntry.h"
 
 using namespace std;
 
-class Buffer {
+class PCBuffer {
 public:
-	Buffer(istream& input);
-	~Buffer();
-	void push(BufferEntry entry);
-	BufferEntry pop();
+	PCBuffer(istream& input);
+	~PCBuffer();
+	void push(PCEntry entry);
+	PCEntry pop();
 	bool isEOF();
 private:
 	istream* input;
 	thread reader;
-	queue<BufferEntry>* buffer;
+	queue<PCEntry>* buffer;
 	void readInput();
 };

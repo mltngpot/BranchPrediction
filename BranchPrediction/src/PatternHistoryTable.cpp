@@ -1,57 +1,92 @@
 #include "include/PatternHistoryTable.h"
 
-using namespace std;
-
-PatternHistoryTable::PatternHistoryTable(int patternSize, int tableSize)
-{
-    patterns = new PatternCounter*[tableSize];
-    lru = new LeastRecentlyUsed();
-    taken = 0;
-    this->patternSize = patternSize;
-    this->tableSize = tableSize;
-    this->quickReference = new unsigned int[tableSize];
-}
-
-bool PatternHistoryTable::predict(unsigned int entry)
-{
-    int id = find(entry);
-    if(id == -1){
-        id = addEntry(entry);
+PatternHistoryTable::PatternHistoryTable(int patternLength){
+    int arraySize = patternLength - 3;
+    if(arraySize < 1){
+        arraySize = 1;
     }
-    lru->use(entry);
-    return patterns[id]->predict();
-}
 
-void PatternHistoryTable::update(BufferEntry entry) 
-{
-    int id = find(entry.address);
-    if(id == -1) return;
-    if(entry.taken){
-        patterns[id]->didTake();
-    } else {
-        patterns[id]->didNotTake();
+    this->counters = new unsigned int [arraySize];
+    for(int i = 0; i < arraySize; i++){
+        this->counters[i] = 0;
     }
-}
 
-int PatternHistoryTable::find(unsigned int entry){
-    for(int i = 0; i < taken; i++)
+    currentMask = 0;
+    for(int i = 1; i < patternLength; i++)
     {
-        if(quickReference[i] == entry){
-            return i;
-        }
+        currentMask = ++currentMask << 1;
     }
-    return -1;
 }
 
-int PatternHistoryTable::addEntry(unsigned int entry){
-    int id = -1;
-    if(taken == tableSize){
-        id = lru->getLeastUsed();
-    } else {
-        id = taken++;
-    }
-    quickReference[id] = entry;
-    patterns[id] = new PatternCounter(this->patternSize);
+bool PatternHistoryTable::predict(){
+    unsigned int counter = getCurrentCounter();
+    int shift = getCounterShift();
+    unsigned int mask = getCounterMask(shift);
+    int takeValue = extractTakeValue(counter, mask, shift);
 
-    return id;
+    return takeValue > 1;
+}
+
+void PatternHistoryTable::didTake(){
+    took(true);
+}
+
+void PatternHistoryTable::didNotTake(){
+    took(false);
+}
+
+void PatternHistoryTable::took(bool took){
+    unsigned int counter = getCurrentCounter();
+    int shift = getCounterShift();
+    unsigned int mask = getCounterMask(shift);
+    int takeValue = extractTakeValue(counter, mask, shift);
+
+    took ? takeValue++ : takeValue--;
+    saveTakeValue(counter, mask, shift, takeValue);
+
+    current = current << 1;
+    if(took){
+        current++;
+    }
+
+    current = current & currentMask;
+}
+
+unsigned int PatternHistoryTable::getCurrentCounter(){
+    int index = current / 16;
+    int counter = this->counters[index];
+    return counter;
+}
+
+unsigned int PatternHistoryTable::getCounterMask(int shift){
+    unsigned int mask = 3;
+    mask = mask << shift;
+    return mask;
+}
+
+int PatternHistoryTable::getCounterShift(){
+    int lastFour = current % 16;
+    int shift = lastFour * 2;
+    return shift;
+}
+
+int PatternHistoryTable::extractTakeValue(unsigned int counter, unsigned int mask, int shift){
+    int takeValue = counter & mask;
+    takeValue = takeValue >> shift;
+    return takeValue;
+}
+
+void PatternHistoryTable::saveTakeValue(unsigned int counter, unsigned int mask, int shift, int takeValue){
+     if(takeValue > 3){
+        takeValue = 3;
+    } else if(takeValue < 0){
+        takeValue = 0;
+    }
+    unsigned int invertedMask = ~mask;
+    unsigned int unchangedPart = counter & invertedMask;
+    unsigned int changedPart = takeValue << shift;
+    counter = unchangedPart | changedPart;
+    
+    int index = current / 16;
+    this->counters[index] = counter;
 }

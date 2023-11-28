@@ -1,38 +1,37 @@
 #include <iostream>
 #include <queue>
 
-#include "include/Buffer.h"
-#include "include/BufferEntry.h"
-#include "include/BranchPrediction.h"
+#include "include/PCBuffer.h"
+#include "include/PCEntry.h"
 
 using namespace std;
 
-Buffer::Buffer(istream& inStream) {
+PCBuffer::PCBuffer(istream& inStream) {
 	this->input = &inStream;
-	this->buffer = new queue<BufferEntry>();
+	this->buffer = new queue<PCEntry>();
 	//this->reader = thread(&Buffer::readInput, this);
 	this->readInput();
 }
 
-Buffer::~Buffer() {
+PCBuffer::~PCBuffer() {
 	delete this->buffer;
 }
 
-void Buffer::push(BufferEntry entry) {
+void PCBuffer::push(PCEntry entry) {
 	this->buffer->push(entry);
 }
 
-BufferEntry Buffer::pop() {
-	BufferEntry entry = this->buffer->front();
+PCEntry PCBuffer::pop() {
+	PCEntry entry = this->buffer->front();
 	this->buffer->pop();
 	return entry;
 }
 
-bool Buffer::isEOF() {
+bool PCBuffer::isEOF() {
 	return this->buffer->empty();
 }
 
-void Buffer::readInput() {
+void PCBuffer::readInput() {
 	string line;
 	while(getline(*this->input, line)) {
 		if (line.empty()) {
@@ -41,6 +40,6 @@ void Buffer::readInput() {
 		string addressHex = line.substr(0, 8);
 		unsigned int address = stoul(addressHex, NULL, 16);
 		bool taken = line.substr(9, 1) == "+";
-		this->buffer->push(BufferEntry(address, taken));
+		this->buffer->push(PCEntry(address, taken));
 	}
 }

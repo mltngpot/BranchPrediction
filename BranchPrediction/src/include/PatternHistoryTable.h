@@ -1,22 +1,19 @@
 #pragma once
 
-#include "BufferEntry.h"
-#include "PatternCounter.h"
-#include "LeastRecentlyUsed.h"
-
 class PatternHistoryTable {
-	public:
-	PatternHistoryTable(int patternSize, int tableSize);
-	bool predict(unsigned int entry);
-	void update(BufferEntry entry);
-	private:
-	int find(unsigned int address);
-	int addEntry(unsigned int address);
-	PatternCounter** patterns;
-	unsigned int* quickReference;
-	int patternSize;
-	int tableSize;
-	LeastRecentlyUsed* lru;
-	int taken;
-
+public:
+	PatternHistoryTable(int patternLength = 4);
+	bool predict();
+	void didTake();
+	void didNotTake();
+private:
+	unsigned int current = 0;
+	unsigned int* counters;
+	unsigned int currentMask;
+	void took(bool took);
+	unsigned int getCurrentCounter();
+	unsigned int getCounterMask(int shift);
+	int getCounterShift();
+	int extractTakeValue(unsigned int counter, unsigned int mask, int shift);
+	void saveTakeValue(unsigned int counter, unsigned int mask, int shift, int takeValue);
 };

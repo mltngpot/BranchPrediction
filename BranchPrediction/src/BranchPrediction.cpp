@@ -1,33 +1,36 @@
 ﻿#include <fstream>
 
 #include "include/BranchPrediction.h"
-#include "include/Buffer.h"
-#include "include/BufferEntry.h"
-#include "include/PatternHistoryTable.h"
+#include "include/PCBuffer.h"
+#include "include/PCEntry.h"
+#include "include/BranchHistoryRegister.h"
 #include "include/PredictStats.h"
+#include "include/MainParameters.h"
 
 using namespace std;
 
-static int PHT_HISTORY_SIZE = 4;
-static int PHT_TABLE_SIZE = 512;
-
-int main()
+int main(int argc, char* argv[])
 {
-	ifstream in("gccSmall.trace");
-	Buffer* buffer = new Buffer(in);
+	MainParameters params(argc, argv);
+	int phtSize = params.getPHTSize();
+	int bhrSize = params.getBHRSize();
+	istream* in = params.getInputStream();
 
-	PatternHistoryTable* pht = new PatternHistoryTable(PHT_HISTORY_SIZE, PHT_TABLE_SIZE);
+	PCBuffer* buffer = new PCBuffer(*in);
+
+	BranchHistoryRegister* bhr = new BranchHistoryRegister(phtSize, bhrSize);
 
 	PredictStats stats = PredictStats();
 
 	while (!buffer->isEOF())
 	{
-		BufferEntry entry = buffer->pop();
-		bool prediction = pht->predict(entry.address);
+		PCEntry entry = buffer->pop();
+		bool prediction = bhr->predict(entry.address);
 		stats.update(prediction, entry.taken);
-		pht->update(entry);
+		bhr->update(entry);
 	};
 
 	stats.print();
 
 }
+
