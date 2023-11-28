@@ -3,7 +3,8 @@
 #include "include/MainParameters.h"
 
 using namespace std;
-MainParameters::MainParameters(int argc, char* argv[])
+
+MainParameters::MainParameters(int argc, char** argv)
 {
 	this->argc = argc;
 	this->argv = argv;

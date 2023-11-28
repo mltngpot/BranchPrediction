@@ -1,13 +1,15 @@
+#pragma once
+
 #include <iostream>
 #include <string>
+using namespace std;
 
-class MainParameters
-{
+class MainParameters {
 public:
-	MainParameters(int argc, char* argv[]);
+	MainParameters(int argc, char** argv);
 	int getBHRSize();
 	int getPHTSize();
-	istream* getInputStream();
+	istream * getInputStream();
 	string getStringParameter(string label);
 	int getIntParameter(string label);
 
