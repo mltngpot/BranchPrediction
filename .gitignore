@@ -35,3 +35,11 @@
 .vs
 .vscode
 out
+.DS_Store
+*.xcodeproj
+*Debug/
+CMakeFiles/
+CMakeScripts/
+build/
+*.cmake
+CMakeCache.txt
